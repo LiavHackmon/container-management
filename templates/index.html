@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Container Management</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #2d3748; /* אפור כהה מודרני */
+            margin: 0;
+            padding: 20px;
+            color: #e2e8f0; /* טקסט בהיר לקריאות */
+        }
+        h1 {
+            text-align: center;
+            color: #edf2f7; /* אפור בהיר לניגודיות */
+            margin-bottom: 20px;
+        }
+        .create-btn {
+            display: block;
+            text-align: center;
+            margin: 0 auto 20px;
+            background-color: #4299e1; /* כחול עמוק מודרני */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .create-btn:hover {
+            background-color: #2b6cb0; /* גוון כהה יותר של הכחול */
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        li {
+            background-color: #edf2f7; /* אפור בהיר, לא בוהק */
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container-info {
+            font-size: 16px;
+            color: #2d3748; /* אפור כהה לקריאות על הרקע הבהיר של li */
+        }
+        .container-actions a {
+            margin-left: 10px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .container-actions a.open {
+            background-color: #3182ce; /* כחול עמוק */
+            color: white;
+        }
+        .container-actions a.open:hover {
+            background-color: #2b6cb0; /* גוון כהה יותר */
+        }
+        .container-actions a.delete {
+            background-color: #e53e3e; /* אדום מודרני */
+            color: white;
+        }
+        .container-actions a.delete:hover {
+            background-color: #c53030; /* גוון כהה יותר */
+        }
+        @media (max-width: 600px) {
+            li {
+                flex-direction: column;
+                text-align: center;
+            }
+            .container-actions {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Container List</h1>
+    <a href="/create" class="create-btn">Create New Container</a>
+    <ul>
+        {% for container in containers %}
+        <li>
+            <div class="container-info">
+                <strong>{{ container.name }}</strong> - {{ container.status }}
+            </div>
+            <div class="container-actions">
+                {% if container.attrs['HostConfig']['PortBindings'] and '80/tcp' in container.attrs['HostConfig']['PortBindings'] %}
+                    <a href="http://localhost:{{ container.attrs['HostConfig']['PortBindings']['80/tcp'][0]['HostPort'] }}" class="open">Open Container</a>
+                {% endif %}
+                <a href="/delete/{{ container.id }}" class="delete">Delete</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
